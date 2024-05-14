@@ -357,7 +357,7 @@
 
   // Profit Report Line Chart
   // --------------------------------------------------------------------
-  fetch("/pipon/src/controllers/api.php?info=sleep").then(response => response.json()).then(data => {
+  fetch("/src/controllers/api.php?info=sleep").then(response => response.json()).then(data => {
   let dataSleep = [];
   for(const key in data){
     dataSleep.push(parseInt(data[key]["cantidad"]));
@@ -424,7 +424,7 @@
 });
   // Order Statistics Chart
   // --------------------------------------------------------------------
-fetch("/pipon/src/controllers/api.php?info=nutrients").then(response => response.json()).then(data => {
+fetch("/src/controllers/api.php?info=nutrients").then(response => response.json()).then(data => {
   document.getElementById("alert-consume").style.display = "none";
   
   for(const key in data){
@@ -501,7 +501,7 @@ fetch("/pipon/src/controllers/api.php?info=nutrients").then(response => response
 
   // Income Chart - Area chart
   // --------------------------------------------------------------------
-fetch("/pipon/src/controllers/api.php?info=weight").then(response => response.json()).then(data => {
+fetch("/src/controllers/api.php?info=weight").then(response => response.json()).then(data => {
   const seriesData = data.map(item => parseFloat(item.cantidad));
   const labelsData = data.map(item => new Date(item.fecha).toLocaleDateString('default', {month: 'short'}));
   const incomeChartEl = document.querySelector('#incomeChart'),

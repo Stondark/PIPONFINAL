@@ -1,9 +1,11 @@
 <?php
 
 require_once(__DIR__ . '/../config/db.php');
-class UserInfo{
+class UserInfo
+{
 
-    public static function validInfoUser($id_username){
+    public static function validInfoUser($id_username)
+    {
         try {
             $dbObj = new Database();
             $db = $dbObj->connect();
@@ -12,45 +14,51 @@ class UserInfo{
             return $query->rowCount() >= 1;
         } catch (PDOException $e) {
             throw $e;
-        }   
+        }
     }
 
-    public static function insertInfoUser($id_username, $age, $imc, $peso, $id_obesidad, $altura, $porcentaje_grasa, $agua_necesaria,$female,$caloriesMaintenance){
+    public static function insertInfoUser($id_username, $age, $imc, $peso, $id_obesidad, $altura, $porcentaje_grasa, $agua_necesaria, $female, $caloriesMaintenance, $json)
+    {
         try {
             $dbObj = new Database();
             $db = $dbObj->connect();
-            $query = $db->prepare("INSERT INTO `usuarios_info` (`id`, `id_user`, `edad`, `imc`, `peso`, `id_obesidad`, `altura`, `porcentaje_grasa`, `agua_necesaria`,`gender`,`calorias_necesarias`)
-                                VALUES (NULL, :id, :age, :imc, :peso, :id_obesidad, :altura, :porcentaje_grasa, :agua_necesaria, :genero, :caloriasmantenimiento);");
-            $query->execute(["id" => $id_username,
-                            "age" => $age,
-                            "imc" => $imc,
-                            "peso" => $peso,
-                            "id_obesidad" => $id_obesidad,
-                            "altura" => $altura,
-                            "porcentaje_grasa" => $porcentaje_grasa,
-                            "agua_necesaria" => $agua_necesaria,
-                            "genero" => $female,
-                            "caloriasmantenimiento" => $caloriesMaintenance]);
+            $query = $db->prepare("INSERT INTO `usuarios_info` (`id`, `id_user`, `edad`, `imc`, `peso`, `id_obesidad`, `altura`, `porcentaje_grasa`, `agua_necesaria`,`gender`,`calorias_necesarias`, `response_questions`)
+                                VALUES (NULL, :id, :age, :imc, :peso, :id_obesidad, :altura, :porcentaje_grasa, :agua_necesaria, :genero, :caloriasmantenimiento, :response_questions);");
+            $query->execute([
+                "id" => $id_username,
+                "age" => $age,
+                "imc" => $imc,
+                "peso" => $peso,
+                "id_obesidad" => $id_obesidad,
+                "altura" => $altura,
+                "porcentaje_grasa" => $porcentaje_grasa,
+                "agua_necesaria" => $agua_necesaria,
+                "genero" => $female,
+                "caloriasmantenimiento" => $caloriesMaintenance,
+                "response_questions" => $json
+            ]);
             return $query;
         } catch (PDOException $e) {
             throw $e;
         }
     }
 
-    public static function getAllInfoById(string $id){
+    public static function getAllInfoById(string $id)
+    {
         try {
             $dbObj = new Database();
             $db = $dbObj->connect();
-            $query = $db->prepare("SELECT ui.*, u.email, u.rol, ob.tipo FROM usuarios u LEFT JOIN usuarios_info ui ON ui.id_user = u.id LEFT JOIN tipos_obesidad ob ON ui.id_obesidad = ob.id 
+            $query = $db->prepare("SELECT ui.*, u.email, u.rol, ob.tipo, u.id AS id_user FROM usuarios u LEFT JOIN usuarios_info ui ON ui.id_user = u.id LEFT JOIN tipos_obesidad ob ON ui.id_obesidad = ob.id 
                                 WHERE u.id = :id");
             $query->execute(["id" => $id]);
             return $query->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw $e;
-        }   
+        }
     }
 
-    public static function getAllInfoUsers(){
+    public static function getAllInfoUsers()
+    {
         try {
             $dbObj = new Database();
             $db = $dbObj->connect();
@@ -59,10 +67,11 @@ class UserInfo{
             return $query->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw $e;
-        }        
+        }
     }
 
-    public static function editPeso(string $id, string $peso) {
+    public static function editPeso(string $id, string $peso)
+    {
         try {
             $dbObj = new Database();
             $db = $dbObj->connect();
@@ -76,11 +85,11 @@ class UserInfo{
             return $query->rowCount() > 0;
         } catch (PDOException $e) {
             throw $e;
-
         }
     }
 
-    public static function editGrasa(string $id, string $grasa) {
+    public static function editGrasa(string $id, string $grasa)
+    {
         try {
             $dbObj = new Database();
             $db = $dbObj->connect();
@@ -94,12 +103,12 @@ class UserInfo{
             return $query->rowCount() > 0;
         } catch (PDOException $e) {
             throw $e;
-
         }
     }
 
-    
-    public static function editImc(string $id, string $imc) {
+
+    public static function editImc(string $id, string $imc)
+    {
         try {
             $dbObj = new Database();
             $db = $dbObj->connect();
@@ -113,10 +122,23 @@ class UserInfo{
             return $query->rowCount() > 0;
         } catch (PDOException $e) {
             throw $e;
-
         }
     }
 
-
+    public static function getAllInfoPacientes()
+    {
+        try {
+            $dbObj = new Database();
+            $db = $dbObj->connect();
+            $query = $db->prepare("SELECT u.id, u.email, tipo_obesidad.tipo, u.usuario, ui.response_questions
+            FROM usuarios u
+            LEFT JOIN usuarios_info ui ON u.id = ui.id_user
+            LEFT JOIN tipos_obesidad tipo_obesidad ON ui.id_obesidad = tipo_obesidad.id 
+            WHERE u.rol != 3");
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw $e;
+        }
+    }
 }
-

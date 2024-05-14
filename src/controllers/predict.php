@@ -5,7 +5,8 @@ require_once "../model/user.php";
 require_once "../model/obesidad.php";
 require_once "../model/peso.php";
 
-function getImc($height, $weight){
+function getImc($height, $weight)
+{
     $height = floatval(str_replace(",", ".", $height));
     $imc = floatval($weight) / ($height * $height);
     // Redondea el resultado a dos decimales
@@ -13,12 +14,14 @@ function getImc($height, $weight){
     return $imc;
 }
 
-function necessarywater($weight){
+function necessarywater($weight)
+{
     $water = floatval($weight) * 35;
     $water = round($water, 2) / 1000;
     return $water;
 }
-function calcularCaloriasMantenimiento($weight, $height, $age, $female) {
+function calcularCaloriasMantenimiento($weight, $height, $age, $female)
+{
     $weightcm = floatval($weight);
     $heightcm = floatval($height);
     $agecm = intval($age);
@@ -32,7 +35,6 @@ function calcularCaloriasMantenimiento($weight, $height, $age, $female) {
     return $caloriesMaintenance;
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     session_start();
     unset($_SESSION['error']);
@@ -40,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $infoPredict = new UserInfo();
     $obesity = new Obesidad();
     $pesoEntity = new Peso();
+    $json = json_encode($_POST);
 
     if (!isset($_SESSION['username'])) {
         $_SESSION['error'] = "No se encontró información del usuario.";
@@ -57,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $age = $_POST["Age"];
     $height = str_replace(",", ".", $_POST["Height"]);
     $weight = $_POST["Weight"];
-    if(strlen($height) != 3 && !(strpos($height, ".") || strpos($height, ","))){
+    if (strlen($height) != 3 && !(strpos($height, ".") || strpos($height, ","))) {
         $_SESSION['error'] = "Tu altura debe coincidir a 0.00";
         header("Location: ../views/html/Encuesta.php");
         exit();
@@ -67,14 +70,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $height = $firtsNum . "." . $nemNumber;
     }
 
-    $predict = $_POST["predictionResult"];
+    // $predict = $_POST["predictionResult"] ?? 1;
+    $predict = 'Normal_Weight';
     $imc = getImc($height, $weight);
     $water = necessarywater($weight);
     $female = $_POST["female"];
     $caloriesMaintenance = calcularCaloriasMantenimiento($weight, $height, $age, $female);
     try {
         $userInfo = $user::getInfoUser($username);
-        if(!$userInfo){
+        if (!$userInfo) {
             $_SESSION['error'] = "No se encontró información del usuario.";
             header("Location: ../views/html/login.php");
             exit();
@@ -82,20 +86,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $userId = $userInfo["id"];
         $idPredict = $obesity::getIdObesity($predict);
-        if(!$idPredict){
+        if (!$idPredict) {
             $_SESSION['error'] = "Ocurrió un error intentando obtener tu predicción.";
             header("Location: ../views/html/Encuesta.php");
             exit();
         }
         $idPredict = $idPredict["id"];
-        $resultQuery = $infoPredict::insertInfoUser($userId, $age, $imc, $weight, $idPredict, $height, "", $water, $female, $caloriesMaintenance);
-        if(!$resultQuery){
+        $resultQuery = $infoPredict::insertInfoUser($userId, $age, $imc, $weight, $idPredict, $height, "", $water, $female, $caloriesMaintenance, $json);
+        if (!$resultQuery) {
             $_SESSION['error'] = "Ocurrió un error";
             header("Location: ../views/html/Encuesta.php");
             exit();
         }
 
-        if(!$pesoEntity::insertPeso($weight, $userId)){
+        if (!$pesoEntity::insertPeso($weight, $userId)) {
             $_SESSION['error'] = "Ocurrió un error";
             header("Location: ../views/html/Encuesta.php");
             exit();

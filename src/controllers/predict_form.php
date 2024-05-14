@@ -23,9 +23,8 @@ if(!$userInfo){
     header("Location: Login.php");
     exit();
 }
-if(!$infoPredict::validInfoUser($userInfo["id"])){
+if(!$infoPredict::validInfoUser($userInfo["id"]) && $userInfo['rol'] != 3){
     header("Location: Encuesta.php");
     exit();
 }
-
 ?>

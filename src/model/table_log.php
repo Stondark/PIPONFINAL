@@ -11,12 +11,14 @@ class Table
             $db = $dbObj->connect();
             $totalResult = [];
             // Tables to get query
-            $tablesQuery = [["table" => "agua_persona", "fields" => "cantidad" , "type" => "Agua"], 
-                            ["table" => "comida_contador", "fields" => "calorias", "type" => "Comida"], 
-                            ["table" => "ejercicio_persona", "fields" => "cantidad", "type" => "Ejercicio"],
-                            ["table" => "pasos_persona", "fields" => "cantidad", "type" => "Pasos"],
-                            ["table" => "suenio_persona", "fields" => "cantidad", "type" => "Sueño"],
-                            ["table" => "log_peso_user", "fields" => "cantidad", "type" => "Peso"]];
+            $tablesQuery = [
+                ["table" => "agua_persona", "fields" => "cantidad", "type" => "Agua"],
+                ["table" => "comida_contador", "fields" => "calorias", "type" => "Comida"],
+                ["table" => "ejercicio_persona", "fields" => "cantidad", "type" => "Ejercicio"],
+                ["table" => "pasos_persona", "fields" => "cantidad", "type" => "Pasos"],
+                ["table" => "suenio_persona", "fields" => "cantidad", "type" => "Sueño"],
+                ["table" => "log_peso_user", "fields" => "cantidad", "type" => "Peso"]
+            ];
             foreach ($tablesQuery as $key => $value) {
                 $auxArr = [];
                 $query = $db->prepare("SELECT {$value['fields']}, fecha FROM {$value['table']} WHERE id_usuario = :id_user ORDER BY fecha DESC LIMIT 6");
@@ -30,7 +32,7 @@ class Table
             foreach ($totalResult as $record) {
                 $type = $record["type"];
                 $result = $record["result"];
-                
+
                 foreach ($result as $entry) {
                     $last6Records[] = [
                         "type" => $type,
@@ -39,11 +41,11 @@ class Table
                     ];
                 }
             }
-            
-            usort($last6Records, function($a, $b) {
+
+            usort($last6Records, function ($a, $b) {
                 return strtotime($b['fecha']) - strtotime($a['fecha']);
             });
-            
+
             // Tomar solo los primeros 6 registros
             return array_slice($last6Records, 0, 6);
         } catch (PDOException $e) {

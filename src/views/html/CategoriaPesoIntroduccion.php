@@ -1,8 +1,8 @@
 <?php
-
+include_once "../../controllers/predict_form.php";
 include_once "../../controllers/obtain_user_info.php";
 include_once "../../controllers/session.php";
-include_once "../../controllers/predict_form.php";
+
 $tipo = $_SESSION['user']['tipo'];
 
 ?>

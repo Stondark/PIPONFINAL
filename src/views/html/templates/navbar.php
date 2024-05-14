@@ -12,7 +12,7 @@
         <!-- Search -->
         <div class="navbar-nav align-items-center">
             <div class="nav-item d-flex align-items-center">
-                <?php echo "<p class='mb-0'>Bienvenido {$_SESSION['username']} Edad: {$_SESSION['user']['edad']} | Peso: {$_SESSION['user']['peso']}kg | Altura: {$_SESSION['user']['altura']}m | Categoria: {$_SESSION['user']['tipo']}</p>"; ?>
+                <?php echo ($_SESSION['user']['rol'] !== 3) ? "<p class='mb-0'>Bienvenido {$_SESSION['username']} Edad: {$_SESSION['user']['edad']} | Peso: {$_SESSION['user']['peso']}kg | Altura: {$_SESSION['user']['altura']}m | Categoria: {$_SESSION['user']['tipo']}</p>" : "<p class='mb-0'>Bienvenido {$_SESSION['username']}</p>"; ?>
             </div>
         </div>
         <!-- /Search -->

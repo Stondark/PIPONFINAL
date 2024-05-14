@@ -41,9 +41,12 @@
 </head>
 
 <body>
-<?php include_once "../../controllers/valid_predict.php"; ?>
-<?php if (session_status() == PHP_SESSION_NONE){session_start();}?>
-              
+  <?php include_once "../../controllers/valid_predict.php"; ?>
+  <?php
+  if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+  } ?>
+
   <!-- Content -->
   <div class="container-xxl">
     <div class="authentication-wrapper authentication-basic container-p-y">
@@ -61,7 +64,7 @@
             <h4 class="mb-2">¡Hagamos una pequeña encuesta!</h4>
             <p class="mb-4">Vamos a predecir tu categoría de peso </p>
 
-            <form id="formEncuesta" class="mb-3" action="/pipon\src\controllers\predict.php" method="POST">
+            <form id="formEncuesta" class="mb-3" action="../../controllers/predict.php" method="POST">
               <div class="mb-3">
                 <label for="MTRANS_Automobile" class="form-label">¿Te movilizas mucho en automovil?</label>
                 <input type="text" class="form-control" id="MTRANS_Automobile" name="MTRANS_Automobile" placeholder="1: Sí 0: No" step="1" min="0" max="1" autofocus />
@@ -144,14 +147,13 @@
               </div>
               <div class="mb-3">
                 <input type="hidden" id="predictionResult" name="predictionResult" value="" />
-
               </div>
               <!-- Botón de realizar predicción con JavaScript -->
               <button class="btn btn-primary d-grid w-100" type="button" id="predictButton">Registrarse</button>
               <!-- Resultado de la predicción (se mostrará con JavaScript) -->
               <p class="text-center" id="result"></p>
               <?php
-              
+
               if (isset($_SESSION["error"])) {
                 echo '<div class="alert alert-danger" role="alert">' . $_SESSION["error"] . '</div>';
                 unset($_SESSION['error']);

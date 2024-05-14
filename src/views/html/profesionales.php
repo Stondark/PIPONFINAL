@@ -1,24 +1,5 @@
 <!DOCTYPE html>
-<?php
-if (!isset($_GET["id"]) || empty($_GET["id"])) {
-  header("Location= dashboard.php");
-  exit();
-}
 
-
-include_once "../../model/user.php";
-$userLog = new User();
-
-$userData = $userLog::getUserById($_GET["id"]);
-if (!$userData) {
-  $_SESSION['error'] = "Error obteniendo la información del usuario";
-  header("Location: ../html/administracion.php");
-  exit();
-}
-
-
-
-?>
 <!-- =========================================================
 * Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
 ==============================================================
@@ -45,9 +26,6 @@ if (!$userData) {
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
-
-    <title>Ingresar agua</title>
-
     <meta name="description" content="" />
 
     <!-- Favicon -->
@@ -83,72 +61,73 @@ if (!$userData) {
   </head>
 
   <body>
+
+  <?php include_once "../../model/user.php";
+  $dataUsers = User::getAllProfessional();
+  ?>
+
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
-      <div class="layout-container">
-        <!-- Menu -->
-        <?php include_once "./templates/aside.php"; ?>
-        <!-- / Menu -->
-        <!-- Layout container -->
-        <div class="layout-page">
-          <!-- Navbar -->
-          <?php include_once "./templates/navbar.php"; ?>
-          <!-- / Navbar -->
-          <!-- Content wrapper -->
-          <div class="content-wrapper">
-            <!-- Content -->
-            <div class="container-xxl flex-grow-1 container-p-y">
-              <!-- Layout Demo -->
-              <form action="../../controllers/users.php" method="post">
-              <div class="d-flex align-items-end row">
-                      <div class="card text-center mb-3">
-                        <div class="card-body">
-                          <h2 class="card-title"> <span class="text-muted fw-light">Editar información de </span> <?php echo $userData["usuario"]; ?> </h2>
-                          <input name="usuario" type="text" class="form-control" placeholder="Nombre de usuario" value="<?php echo $userData["usuario"]; ?>">
-                          <input name="email" type="email" class="form-control" placeholder="Correo electrónico" value="<?php echo $userData["email"]; ?>">
-                          <input name="id" type="hidden" class="form-control" value="<?php echo $userData["id"]; ?>">
-                          <select class="form-select" aria-label="Default select example" name="role">
-                            <option selected value="<?php echo $userData["rol"] ?>"><?php echo $userData["type"]; ?></option>
-                            <?php if ($userData["rol"] === 1) : ?>
-                            <option value="2">Usuario</option>
-                            <?php elseif ($userData["rol"] === 2) : ?>
-                            <option value="1">Administrador</option>
-                            <?php endif ?>
-                          </select>
+  	<div class="layout-container">
+  		<!-- Menu -->
+  		<?php include_once "./templates/aside.php"; ?>
+  		<!-- / Menu -->
+  		<!-- Layout container -->
+  		<div class="layout-page">
+  			<!-- Navbar -->
+  			<?php include_once "./templates/navbar.php"; ?>
+  			<!-- / Navbar -->
+  			<!-- Content wrapper -->
+  			<div class="content-wrapper">
+  				<!-- Content -->
+  				<div class="container-xxl flex-grow-1 container-p-y">
+  					<!-- Basic Bootstrap Table -->
+  					<div class="card">
+
+  						<h5 class="card-header">Profesionales</h5>
+  						<?php if (isset($_SESSION["error"])) {
+                echo '<div class="alert alert-danger" role="alert">' .
+                  $_SESSION["error"] .
+                  "</div>";
+                unset($_SESSION["error"]);
+              } ?>
+  					</div>
+  					<div class="container-fluid">
+  						<div class="row">
+  							<div class="col-md-8">
+  								<div class="container text-center mt-2">
+  									<div class="row row-cols-4">
+  										<?php foreach ($dataUsers as $currentUser) : ?>
+  										<div class="col-sm-6 mb-3 mb-sm-4">
+  											<div class="card">
+  												<div class="card-body">
+  													<h5 class="card-title" professional-name="<?php echo $currentUser["usuario"]; ?>"><?php echo $currentUser["usuario"]; ?></h5>
+  													<p class="card-text">Soy un <?php echo $currentUser["nombre"]; ?>, mi correo es <?php echo $currentUser["email"]; ?></p>
+  													<a href="#" class="card-link" id="<?php echo $currentUser["id"]; ?>">Abrir chat <i class='bx bx-message-dots'></i></a>
+  												</div>
+  											</div>
+  										</div>
+  										<?php endforeach; ?>
+  									</div>
+  								</div>
+  							</div>
+  							<div class="col-md-4 mt-2" id="chat-container" style="display: none;">
+                  <div class="card">
+                          <h5 class="card-header">Chat con el especialista <span id="currentNameProfessional"></span></h5>
+                          <div class="card-body" id="chat-messages" style="max-height: 300px; overflow-y: auto;">
+                              <!-- Aquí se mostrarán los mensajes del chat -->
+                          </div>
+                          <div class="input-group mb-3 p-2">
+                              <input type="text" class="form-control" placeholder="Ingresa tu mensaje" aria-label="Ingresa tu mensaje" aria-describedby="button-addon2" id="input-message">
+                              <button class="btn btn-primary btn-outline-secondary" type="button" id="send-message"><i class='bx bx-send'></i></button>
+                          </div>
                       </div>
-                      <div class="mt-3">
-                        <!-- Button trigger modal -->
-                        <button
-                          type="submit"
-                          class="btn btn-primary"
-                          name="submit_edit"
-                        >
-                        Editar
-                        </button>
-                          
-                        </div>
-                    </div>
-                    
-              </div> 
-              
-              </form>
-              <!--/ Layout Demo -->
-            </div>
-            <!--Footer -->
-            <div class="content-backdrop fade"></div>
-          </div>
-          <!-- Content wrapper -->
-        </div>
-        <!-- / Layout page -->
-      </div>
-
-      <!-- Overlay -->
-      <div class="layout-overlay layout-menu-toggle"></div>
-    </div>
-    <!-- / Layout wrapper -->
-
-  
-
+                  </div>
+  							</div>
+  						</div>
+  					</div>
+  				</div>
+              <!--/ Basic Bootstrap Table -->
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="../assets/vendor/libs/jquery/jquery.js"></script>
@@ -163,6 +142,7 @@ if (!$userData) {
 
     <!-- Main JS -->
     <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/chat.js"></script>
 
     <!-- Page JS -->
 

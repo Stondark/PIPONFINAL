@@ -61,10 +61,10 @@
   </head>
 
   <body>
-  <?php include_once "../../model/user_info.php"; 
-        $usersEntitys = new UserInfo();
-        $dataUsers = $usersEntitys::getAllInfoUsers();
-?>
+  <?php include_once "../../model/user_info.php";
+  $usersEntitys = new UserInfo();
+  $dataUsers = $usersEntitys::getAllInfoUsers();
+  ?>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
@@ -86,11 +86,13 @@
                 
                 <h5 class="card-header">Usuarios</h5>
                 <?php
-                    if (isset($_SESSION["error"])) {
-                      echo '<div class="alert alert-danger" role="alert">' . $_SESSION["error"] . '</div>';
-                      unset($_SESSION['error']);
-                    }
-                    ?>
+
+                if (isset($_SESSION["error"])) {
+
+                  echo '<div class="alert alert-danger" role="alert">' . $_SESSION["error"] . '</div>';
+                  unset($_SESSION['error']);
+                }
+                ?>
                 <div class="table-responsive text-nowrap">
                   <table class="table">
                     <thead>
@@ -102,27 +104,27 @@
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                    <?php foreach($dataUsers as $value): ?>
+                    <?php foreach ($dataUsers as $value) : ?>
                         <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php echo $value["usuario"]?></strong></td>
-                        <td><?php echo $value["email"]?></td>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php echo $value["type"]?></strong></td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php echo $value["usuario"] ?></strong></td>
+                        <td><?php echo $value["email"] ?></td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?php echo $value["type"] ?></strong></td>
                         <td>
                           <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                               <i class="bx bx-dots-vertical-rounded"></i>
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="../../controllers/users.php?opt=edit&id=<?php echo $value["id"]?>"
+                              <a class="dropdown-item" href="../../controllers/users.php?opt=edit&id=<?php echo $value["id"] ?>"
                                 ><i class="bx bx-edit-alt me-1"></i> Editar</a
                               >
-                              <a class="dropdown-item" href="../../controllers/users.php?opt=delete&id=<?php echo $value["id"]?>"
+                              <a class="dropdown-item" href="../../controllers/users.php?opt=delete&id=<?php echo $value["id"] ?>"
                                 ><i class="bx bx-trash me-1"></i> Borrar</a>
                             </div>
                           </div>
                         </td>
                       </tr>
-                    <?php endforeach?>
+                    <?php endforeach ?>
                     </tbody>
                   </table>
                 </div>

@@ -43,6 +43,19 @@
 <body>
   <!-- Content -->
 
+  <?php
+
+  if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+  }
+  ?>
+
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+
   <div class="container-xxl">
     <div class="authentication-wrapper authentication-basic container-p-y">
       <div class="authentication-inner">
@@ -59,7 +72,7 @@
             <h4 class="mb-2">¡Hora de despegar tu salud! 🚀</h4>
             <p class="mb-4">Crea tu cuenta y comencemos a cuidarnos</p>
 
-            <form id="formAuthentication" class="mb-3" action="/pipon\src\controllers\register.php?opt=register" method="POST">
+            <form id="formAuthentication" class="mb-3" action="../../controllers/register.php?opt=register" method="POST">
               <div class="mb-3">
                 <label for="username" class="form-label">Nombre de usuario</label>
                 <input type="text" class="form-control" id="username" Required name="username" placeholder="Ingresa tu nombre de usuario" autofocus />
@@ -75,8 +88,29 @@
                   <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                 </div>
               </div>
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="medicoCheck" name="medicoCheck">
+                <label class="form-check-label" for="medicoCheck" name="medicoCheck">
+                  ¿Médico especialista?
+                </label>
+              </div>
+              <div class="mb-3" id="idnumberContainer">
+                <label for="idnumber" class="form-label">Número de identificación</label>
+                <input type="number" class="form-control" id="idnumber" required name="idnumber" placeholder="Ingresa tu número de identificación"  />
+              </div>
+              <div class="mb-3" id="profesionContainer">
+                <label for="profesion" class="form-label">Profesión</label>
+                <select class="form-select" id="profesion" name="profesion" required >
+                  <option value="">Selecciona tu profesión</option>
+                  <option value="1">Médico general</option>
+                  <option value="2">Nutricionista</option>
+                  <option value="3">Psicólogo deportivo</option>
+                  <option value="4">Entrenador físico</option>
+                </select>
+              </div>
+
               <?php
-              session_start(); 
+
               if (isset($_SESSION["error"])) {
                 echo '<div class="alert alert-danger" role="alert">' . $_SESSION["error"] . '</div>';
                 unset($_SESSION['error']);
@@ -85,6 +119,8 @@
               <div class="mb-3">
                 <button class="btn btn-primary d-grid w-100">Continuar</button>
               </div>
+
+
             </form>
 
             <p class="text-center">
@@ -118,6 +154,7 @@
 
   <!-- Main JS -->
   <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/register.js"></script>
 
   <!-- Page JS -->
 
